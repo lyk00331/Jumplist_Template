@@ -1,0 +1,13 @@
+typedef struct {
+    uint signature;
+} LNK;
+
+
+LittleEndian();
+
+
+while(!FEof()){
+    while(0x0000004C){
+        LNK test;
+    }
+}
