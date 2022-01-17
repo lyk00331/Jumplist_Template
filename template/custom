@@ -6,8 +6,17 @@ typedef struct {
 LittleEndian();
 
 
+//print1
 while(!FEof()){
     while(0x0000004C){
+        LNK test;
+    }
+}
+
+//print2
+
+while(!FEof()){
+    while(ReadUInt(FTell()+i) == 0x00000002){
         LNK test;
     }
 }
