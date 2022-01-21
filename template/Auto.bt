@@ -11,13 +11,11 @@ string ReadGUID(GUID id)
 }
 
 typedef enum <short> {
-    BigEndian = 0xFEFF,
     LittleEndian = 0xFFFE
 }ByteOrder1;
 
 typedef enum <short> {
-    Bigendian = 0xFFFE,
-    Littleendian = 0xFEFF
+    BigEndian = 0xFFFE,
 }ByteOrder2;
 
 typedef struct {
