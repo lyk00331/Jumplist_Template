@@ -33,7 +33,6 @@ typedef struct {
     }
     short SectorShift;
     short MiniSectorShift;
-    //6byte인데 자료형이 6byte인게 없음
     ubyte reserved[6];
     uint DirectorySector;
     uint FATSector;
