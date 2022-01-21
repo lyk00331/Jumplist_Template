@@ -1,0 +1,62 @@
+typedef ubyte GUID[16] <read=ReadGUID>;
+
+string ReadGUID(GUID id)
+{
+    string sGUID;
+
+    SPrintf(sGUID, "{%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X}",
+        id[3], id[2], id[1], id[0], id[5], id[4], id[7], id[6], id[8], id[9], id[10], id[11],
+        id[12], id[13], id[14], id[15]);
+    return sGUID;
+}
+
+typedef enum <short> {
+    LittleEndian = 0xFFFE
+}ByteOrder1;
+
+typedef enum <short> {
+    BigEndian = 0xFFFE,
+}ByteOrder2;
+
+typedef struct {
+    char Signature[8];
+    GUID CLSID <read=ReadGUID>;
+    short MinorVersion;
+    short MajorVersion;
+    if(flag == 1){
+        ByteOrder1 byteorder <format=hex>;
+    }
+    else{
+        ByteOrder2 byteorder <format=hex>;
+    }
+    short SectorShift;
+    short SBAT;
+    short Reserved1;
+    uint Reserved2;
+    uint DirectorySector;
+    uint FATSector;
+    uint SECID;
+    uint TransactionSignature;
+    uint MiniStreamCutoffSize;
+    uint MiniFATLocation;
+    uint MiniFAT;
+    uint First_DIFAT_Sector_Location;
+    uint DIFATSector;
+    uint FAT_N_Location[109];
+    FSeek((FAT_N_Location[0]+0x01)*0x200);
+    int BBAT[128];
+}FileHeader;
+
+local int flag;
+FSeek(28);
+if(ReadUByte(FTell()) == 0xFE){
+    LittleEndian();
+    flag=1;
+
+}else{
+    BigEndian();
+    flag=0;
+}
+
+FSeek(0);     
+FileHeader header;
