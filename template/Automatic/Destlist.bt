@@ -1,0 +1,78 @@
+//DestList Header
+typedef enum <int> {
+    Windows7or8 = 0x01,
+    Windows10 = 0x04
+} Version;
+
+// typedef enum <int64>{
+//    ~~~
+//} LastIssuedEntryIDNumber;
+//대충 여기에 8바이트 자료형 써주고, Last Issued Entry ID Number 가져오기
+
+
+// //Windows 7or8
+// //Header Version 1
+// typedef struct{
+//     Version version;
+//     int TotalNumberOfCurrentEntries;
+//     int TotalNumberOfPoinnedEntries;
+//     int FloatingPointValue;
+//     //LastIssuedEntryIDNumber IDNumber;
+//     int64 LastIssuedEntryIDNumber;
+//     int64 NumberOfAddorDeleteActions;
+// } Win7or8_FileInfomation;
+
+
+//Windows 10
+//Header Version 4
+
+typedef struct{
+    Version version;
+    int TotalNumberOfCurrentEntries;
+    int TotalNumberOfPoinnedEntries;
+    int UnkownValue;
+    //LastIssuedEntryIDNumber IDNumber;
+    int64 LastIssuedEntryIDNumber;
+    int64 NumberOfAddorDeleteorReOpenActions;
+} FileHeader <optimize=true>;
+
+typedef struct{
+    int64 CheckSum;
+    ubyte NewVolumeID[16];
+    ubyte NewObjectID[16];
+    ubyte BirthVolumeID[16];
+    ubyte BirthObjectID[16];
+    ubyte NetBIOS[16];
+    int EntryIDNumber;
+    int64 Unknown;
+    int64 MSFILETIME;
+    uint Pin;
+    int Unknown;
+    int AcessCount;
+    int64 Unknown;
+    short LengthOfUnicode;
+} Win7or8_FileInfomation;
+
+
+typedef struct{
+    int64 CheckSum;
+    ubyte NewVolumeID[16];
+    ubyte NewObjectID[16];
+    ubyte BirthVolumeID[16];
+    ubyte BirthObjectID[16];
+    ubyte NetBIOS[16];
+    int EntryIDNumber;
+    int64 Unknown;
+    int64 MSFILETIME;
+    uint Pin;
+    int Unknown;
+    int AcessCount;
+    int64 Unknown;
+    short LengthOfUnicode;
+} Win10_FileInfomation;
+
+//Main
+FileHeader header;
+if(header.version == 4){
+    Win10_FileInfomation FileInfo;
+}
