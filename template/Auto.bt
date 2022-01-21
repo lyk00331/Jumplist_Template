@@ -20,7 +20,7 @@ typedef struct {
     GUID CLSID <read=ReadGUID>;
     short MinorVersion;
     short MajorVersion;
-    short ByteOrder byteorder <format=hex>;
+    ByteOrder byteorder <format=hex>;
 
 
 
