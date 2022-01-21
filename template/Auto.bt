@@ -1,0 +1,36 @@
+typedef ubyte GUID[16] <read=ReadGUID>;
+
+string ReadGUID(GUID id)
+{
+    string sGUID;
+
+    SPrintf(sGUID, "{%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X}",
+        id[3], id[2], id[1], id[0], id[5], id[4], id[7], id[6], id[8], id[9], id[10], id[11],
+        id[12], id[13], id[14], id[15]);
+    return sGUID;
+}
+
+typedef enum <ubyte> {
+    BigEndian = 0xFF,
+    LittleEndian = 0xFE
+}ByteOrder;
+
+typedef struct {
+    char Signature[8];
+    GUID CLSID <read=ReadGUID>;
+    short MinorVersion;
+    short MajorVersion;
+    short ByteOrder byteorder <format=hex>;
+
+
+
+}FileHeader;
+
+if(FSeek(28) == 0xFE){
+    LittleEndian();
+}else
+    BigEndian();
+
+FSeek(0);   
+FileHeader header;
+
