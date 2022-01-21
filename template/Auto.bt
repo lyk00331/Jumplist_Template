@@ -10,27 +10,40 @@ string ReadGUID(GUID id)
     return sGUID;
 }
 
-typedef enum <ubyte> {
-    BigEndian = 0xFF,
-    LittleEndian = 0xFE
-}ByteOrder;
+typedef enum <short> {
+    LittleEndian = 0xFFFE
+}ByteOrder1;
+
+typedef enum <short> {
+    BigEndian = 0xFFFE,
+}ByteOrder2;
 
 typedef struct {
     char Signature[8];
     GUID CLSID <read=ReadGUID>;
     short MinorVersion;
     short MajorVersion;
-    ByteOrder byteorder <format=hex>;
-
+    if(flag == 1){
+        ByteOrder1 byteorder <format=hex>;
+    }
+    else{
+        ByteOrder2 byteorder <format=hex>;
+    }
 
 
 }FileHeader;
 
-if(FSeek(28) == 0xFE){
+local int flag;
+
+FSeek(28);
+if(ReadUByte(FTell()) == 0xFE){
     LittleEndian();
-}else
+    flag=1;
+
+}else{
     BigEndian();
+    flag=0;
+}
 
 FSeek(0);   
 FileHeader header;
-
