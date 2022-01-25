@@ -47,7 +47,7 @@ typedef struct{
     FILETIME MSFILETIME;
     uint Pin;
     uint Unknown;
-    uint AcessCount;
+    float AcessCount;
     uint64 Unknown;
     short LengthOfUnicode;
     wchar_t EntryStringData[LengthOfUnicode];
