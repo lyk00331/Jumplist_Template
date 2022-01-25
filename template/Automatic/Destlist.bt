@@ -18,7 +18,7 @@ typedef struct{
         FSeek(24);
         uint64 NumberOfAddorDeleteActions;
     }
-} FileHeader <optimize=true>;
+} FileHeader;
 
 typedef struct{
     uint64 Checksum;
@@ -29,10 +29,11 @@ typedef struct{
     ubyte NetBIOS[16];
     uint64 EntryIDNumber;
     uint Unknown;
-    uint64 MSFILETIME;
+    FILETIME MSFILETIME;
     uint Pin;
-    short Unknown;
-} Win7or8_FileInfomation;
+    short LengthOfUnicode;
+    ubyte EntryStringData[LengthOfUnicode*2];
+} Win7or8_FileInfomation <optimize=true>;
 
 typedef struct{
     uint64 Checksum;
@@ -43,13 +44,14 @@ typedef struct{
     ubyte NetBIOS[16];
     uint EntryIDNumber;
     uint64 Unknown;
-    uint64 MSFILETIME;
+    FILETIME MSFILETIME;
     uint Pin;
     uint Unknown;
     uint AcessCount;
     uint64 Unknown;
     short LengthOfUnicode;
-} Win10_FileInfomation;
+    ubyte EntryStringData[LengthOfUnicode*2];
+} Win10_FileInfomation <optimize=true>;
 
 
 //Destlist Main
