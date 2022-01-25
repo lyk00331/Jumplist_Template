@@ -32,7 +32,7 @@ typedef struct{
     FILETIME MSFILETIME;
     uint Pin;
     short LengthOfUnicode;
-    ubyte EntryStringData[LengthOfUnicode*2];
+    wchar_t EntryStringData[LengthOfUnicode];
 } Win7or8_FileInfomation <optimize=true>;
 
 typedef struct{
@@ -50,7 +50,7 @@ typedef struct{
     uint AcessCount;
     uint64 Unknown;
     short LengthOfUnicode;
-    ubyte EntryStringData[LengthOfUnicode*2];
+    wchar_t EntryStringData[LengthOfUnicode];
 } Win10_FileInfomation <optimize=true>;
 
 
