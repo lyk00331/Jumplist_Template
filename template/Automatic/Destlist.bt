@@ -4,28 +4,6 @@ typedef enum <int> {
     Windows10 = 0x04
 } Version;
 
-// typedef enum <int64>{
-//    ~~~
-//} LastIssuedEntryIDNumber;
-//대충 여기에 8바이트 자료형 써주고, Last Issued Entry ID Number 가져오기
-
-
-// //Windows 7or8
-// //Header Version 1
-// typedef struct{
-//     Version version;
-//     int TotalNumberOfCurrentEntries;
-//     int TotalNumberOfPoinnedEntries;
-//     int FloatingPointValue;
-//     //LastIssuedEntryIDNumber IDNumber;
-//     int64 LastIssuedEntryIDNumber;
-//     int64 NumberOfAddorDeleteActions;
-// } Win7or8_FileInfomation;
-
-
-//Windows 10
-//Header Version 4
-
 typedef struct{
     Version version;
     int TotalNumberOfCurrentEntries;
@@ -33,7 +11,12 @@ typedef struct{
     int UnkownValue;
     //LastIssuedEntryIDNumber IDNumber;
     int64 LastIssuedEntryIDNumber;
-    int64 NumberOfAddorDeleteorReOpenActions;
+    if(ReadUInt(FSeek(0))==0x04){
+        int64 NumberOfAddorDeleteorReOpenActions;
+    }
+    else if(ReadInt(FSeek(0)) == 0x01){
+        int64 NumberOfAddorDeleteActions;
+    }
 } FileHeader <optimize=true>;
 
 typedef struct{
