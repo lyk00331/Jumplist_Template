@@ -43,16 +43,12 @@ typedef struct{
     ubyte BirthVolumeID[16];
     ubyte BirthObjectID[16];
     ubyte NetBIOS[16];
-    int EntryIDNumber;
-    int64 Unknown;
-    int64 MSFILETIME;
-    uint Pin;
+    int64 EntryIDNumber;
     int Unknown;
-    int AcessCount;
-    int64 Unknown;
-    short LengthOfUnicode;
+    int64 MSFILETIME;
+    int Pin;
+    short Unknown;
 } Win7or8_FileInfomation;
-
 
 typedef struct{
     int64 CheckSum;
@@ -64,7 +60,7 @@ typedef struct{
     int EntryIDNumber;
     int64 Unknown;
     int64 MSFILETIME;
-    uint Pin;
+    int Pin;
     int Unknown;
     int AcessCount;
     int64 Unknown;
@@ -73,6 +69,12 @@ typedef struct{
 
 //Main
 FileHeader header;
-if(header.version == 4){
+if(ReadUInt(FSeek(0)) == 0x04){
+    FSeek(20);
     Win10_FileInfomation FileInfo;
+}
+else if(ReadInt(FSeek(0)) == 0x01){
+    //FSeek(앞 구조 정의한 이름 넣어서 더하기)
+    FSeek(20);
+    Win7or8_FileInfomation FileInfo;
 }
