@@ -58,9 +58,11 @@ typedef struct {
     uint First_DIFAT_Sector_Location;
     uint DIFATSector;
     uint FAT_N_Location[109];
-    FSeek((FAT_N_Location[0]+0x01)*0x200);
-    int BBAT[128];
 }FileHeader;
+
+typedef struct{
+    int Depot[128];
+}BBATArray;
 
 typedef struct{
     char DirectoryEntryName[64];
@@ -77,7 +79,23 @@ typedef struct{
     uint StartSectorID;
     uint SizeofLow;
     uint SizeofHigh;
-}RootStorage;
+}Directory;
+
+typedef struct{
+
+    local int num1;
+    for(num1=0; num1<4; num1++)
+        Directory array;
+}RootStorageArray;
+
+typedef struct{
+    uint MediaType;
+    uint PartitionStatus;
+    local int num2;
+    for(num2=0;num2<126; num2++)
+        uint Cluster;
+
+}MiniFAT<size=512>;
 
 local int flag;
 FSeek(28);
@@ -92,4 +110,8 @@ if(ReadUByte(FTell()) == 0xFE){
 
 FSeek(0);     
 FileHeader header;
-RootStorage rootstorage;
+FSeek((header.FAT_N_Location[0]+0x01)*0x200);
+BBATArray bbat;
+RootStorageArray RootStorage;
+FSeek((header.MiniFATLocation+1)*512);
+MiniFAT minifat;
