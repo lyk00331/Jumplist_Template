@@ -65,7 +65,7 @@ typedef struct{
 }BBATArray;
 
 typedef struct{
-    char DirectoryEntryName[64];
+    wchar_t DirectoryEntryName[32];
     ushort NameLength;
     DirectoryType Type;
     NodeColor Color;
