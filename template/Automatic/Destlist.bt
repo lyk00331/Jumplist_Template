@@ -9,12 +9,13 @@ typedef struct{
     int TotalNumberOfCurrentEntries;
     int TotalNumberOfPoinnedEntries;
     int UnkownValue;
-    //LastIssuedEntryIDNumber IDNumber;
     int64 LastIssuedEntryIDNumber;
-    if(ReadUInt(FSeek(0))==0x04){
+    if(header.version==0x04){
+        FSeek(24);
         int64 NumberOfAddorDeleteorReOpenActions;
     }
-    else if(ReadInt(FSeek(0)) == 0x01){
+    else if(header.version == 0x01){
+        FSeek(24);
         int64 NumberOfAddorDeleteActions;
     }
 } FileHeader <optimize=true>;
@@ -50,14 +51,12 @@ typedef struct{
     short LengthOfUnicode;
 } Win10_FileInfomation;
 
-//Main
+
+//Destlist Main
 FileHeader header;
-if(ReadUInt(FSeek(0)) == 0x04){
-    FSeek(20);
+if(header.version==0x04){
     Win10_FileInfomation FileInfo;
 }
-else if(ReadInt(FSeek(0)) == 0x01){
-    //FSeek(앞 구조 정의한 이름 넣어서 더하기)
-    FSeek(20);
+else if(header.version==0x01){
     Win7or8_FileInfomation FileInfo;
 }
