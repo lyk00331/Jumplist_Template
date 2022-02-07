@@ -55,10 +55,27 @@ typedef struct{
 
 
 //Destlist Main
-FileHeader header;
-if(header.version==0x04){
-    Win10_FileInfomation FileInfo;
+//FileHeader header;
+
+while(!FEof()){
+    if((ReadUInt(FTell())==0x04) && (FSeek(136)+ReadUInt(FTell())==0xFFFFFFFF)){
+        FileHeader header;
+        Win10_FileInfomation FileInfo;
+    }
+    else if((ReadUInt(FTell())==0x01) && (FSeek(136)+ReadUInt(FTell())==0xFFFFFFFF)){
+        FileHeader header;
+        Win7or8_FileInfomation FileInfo;
+    }
+    else
+        FSeek(FTell()+1);
 }
-else if(header.version==0x01){
-    Win7or8_FileInfomation FileInfo;
-}
+
+//if((ReadUInt(FTell())==0x04) && (FSeek(140)+ReadUInt(FTell())==0xFFFFFFFF)){
+//    FSeek(0);
+//    FileHeader header;
+//    Win10_FileInfomation FileInfo;
+//}
+//else if((ReadUInt(FTell())==0x04) && (FSeek(136),ReadUInt(FTell())==0xFFFFFFFF)){
+//    FileHeader header;
+//    Win7or8_FileInfomation FileInfo;
+//}
