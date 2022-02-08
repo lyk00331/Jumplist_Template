@@ -32,6 +32,11 @@ typedef enum <short> {
     BigEndian = 0xFFFE
 }ByteOrder2;
 
+//typedef struct{
+//    FSeek((FAT_N_Location[0]+0x01)*0x200);
+//    int bbat[128];
+//}BBAT;
+
 typedef enum <ubyte>{
     Empty = 0x00,
     Storage = 0x01,
@@ -59,6 +64,8 @@ typedef struct {
     }
     short SectorShift;
     short SBAT;
+    //6byte인데 자료형이 6byte인게 없음
+    //ubyte reserved[6]
     short Reserved1;
     uint Reserved2;
     uint DirectorySector;
@@ -70,11 +77,13 @@ typedef struct {
     uint MiniFAT;
     uint First_DIFAT_Sector_Location;
     uint DIFATSector;
+    //uint FAT_N_Location;
     uint FAT_N_Location[109];
 }FileHeader;
 
 typedef struct{
     int Depot[128];
+    //BBAT bbat;   
 }BBATArray;
 
 typedef struct{
@@ -431,6 +440,7 @@ string ReadExtraBlock(ExtraDataBlock &ExtraBlock)
     return "";
 }
 
+// http://msdn.microsoft.com/en-us/library/cc144089%28VS.85%29.aspx#unknown_74413
 typedef struct
 {
     uint16 Size;
@@ -1111,6 +1121,61 @@ typedef struct{
 
 }LNK;
 
+//800부터 LNK시작임!!!
+
+//DestList Header
+typedef enum <uint> {
+    Windows7or8 = 0x01,
+    Windows10 = 0x04
+}Version;
+
+typedef struct{
+    Version version;
+    uint TotalNumberOfCurrentEntries;
+    uint TotalNumberOfPinnedEntries;
+    uint UnkownValue;
+    uint64 LastIssuedEntryIDNumber;
+    if(header.version==0x04){
+        uint64 NumberOfAddorDeleteorReOpenActions;
+    }
+    else if(header.version == 0x01){
+        uint64 NumberOfAddorDeleteActions;
+    }
+} destlist;
+
+typedef struct{
+    uint64 Checksum;
+    ubyte NewVolumeID[16];
+    ubyte NewObjectID[16];
+    ubyte BirthVolumeID[16];
+    ubyte BirthObjectID[16];
+    ubyte NetBIOS[16];
+    uint64 EntryIDNumber;
+    uint Unknown;
+    FILETIME MSFILETIME;
+    uint Pin;
+    short LengthOfUnicode;
+    wchar_t EntryStringData[LengthOfUnicode];
+} Win7or8_FileInfomation <optimize=true>;
+
+typedef struct{
+    uint64 Checksum;
+    ubyte NewVolumeID[16];
+    ubyte NewObjectID[16];
+    ubyte BirthVolumeID[16];
+    ubyte BirthObjectID[16];
+    ubyte NetBIOS[16];
+    uint EntryIDNumber;
+    uint64 Unknown;
+    FILETIME MSFILETIME;
+    uint Pin;
+    uint Unknown;
+    float AcessCount;
+    uint64 Unknown;
+    short LengthOfUnicode;
+    wchar_t EntryStringData[LengthOfUnicode];
+} Win10_FileInfomation <optimize=true>;
+
 local int flag;
 FSeek(28);
 if(ReadUByte(FTell()) == 0xFE){
@@ -1129,12 +1194,22 @@ BBATArray bbat;
 RootStorageArray RootStorage;
 FSeek((header.MiniFATLocation+1)*512);
 MiniFAT minifat;
-
+LNK LNKEntry;
 //4C 00 00 00 01 14 02 00
-while (!FEof())
-{
-    if(ReadUInt64(FTell()) == 0x000214010000004C)
-            LNK LNKEntry;
+
+//Destlist Main
+//FileHeader header;
+while(true){
+    if(ReadUInt(FTell())==0x04){
+        destlist header;
+        Win10_FileInfomation FileInfo;
+        break;
+    }
+    else if(ReadUInt(FTell())==0x01){
+        destlist header;
+        Win7or8_FileInfomation FileInfo;
+        break;
+    }
     else
         FSeek(FTell()+1);
 }
