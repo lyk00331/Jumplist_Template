@@ -1,4 +1,6 @@
-
+//----------------
+//  LNK.bt
+//----------------
 typedef struct{
     uint MediaType;
     uint PartitionStatus;
@@ -1012,7 +1014,9 @@ typedef struct{
 
 LittleEndian();
 
-//4C 00 00 00 01 14 02 00
+//----------------
+//  Main
+//----------------
 while (!FEof())
 {
     if(ReadUInt(FTell()) == 0x4C)
