@@ -7,7 +7,7 @@
 //  Purpose: Parse the JumpList-custom(*.customDestinations-ms)
 //  Category: Operating System
 //  File Mask: *.customDestinations-ms
-//  ID Bytes: D0 CF 11 E0 A1 B1 1A E1
+//  ID Bytes: 
 //  History: 0.1 2022-02-17 Hyesun Jang, Yukyeong Lee: Initial release
 //------------------------------------------------
 
