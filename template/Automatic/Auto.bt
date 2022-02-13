@@ -11,10 +11,8 @@
 //  History: 0.1 2022-02-17 Hyesun Jang, Yukyeong Lee: Initial release
 //------------------------------------------------
 
-
-
 //----------------
-//  OLE Header
+//  OLE
 //----------------
 typedef ubyte GUID[16] <read=OLEReadGUID>;
 typedef ubyte Node[16] <read=OLEReadGUID>;
@@ -113,8 +111,6 @@ typedef struct{
         uint Cluster;
 
 }MiniFAT<size=512>;
-
-
 
 //----------------
 //  LNK.bt
@@ -1121,10 +1117,8 @@ typedef struct{
 
 }LNK;
 
-
-
 //----------------
-//  Destlist Header
+//  Destlist
 //----------------
 typedef enum <uint> {
     Windows7or8 = 0x01,
@@ -1178,6 +1172,9 @@ typedef struct{
     wchar_t EntryStringData[LengthOfUnicode];
 } Win10_FileInfomation <optimize=true>;
 
+//----------------
+//  start
+//----------------
 local int flag;
 FSeek(28);
 if(ReadUByte(FTell()) == 0xFE){
@@ -1198,8 +1195,6 @@ FSeek((oleheader.MiniFATLocation+1)*512);
 MiniFAT minifat;
 LNK LNKEntry;
 
-
-
 //----------------
 //  Destlist Main
 //----------------
@@ -1218,6 +1213,9 @@ while(true){
         FSeek(FTell()+1);
 }
 
+//----------------
+//  LNK
+//----------------
 while (!FEof())
 {
     if(ReadUInt64(FTell()) == 0x000214010000004C)
