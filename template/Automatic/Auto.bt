@@ -1,14 +1,14 @@
 //------------------------------------------------
 //--- 010 Editor v0.1 Jumplist Template
 //
-//      File: JL_Auto.bt
-//   Authors: Hyesun Jang, Yukyeong Lee
-//   Version: 0.1
-//   Purpose: Quick template for parsing Windows JumpList-automatic(*.automaticDestinations-ms)
+//  File: JL_Auto.bt
+//  Authors: Hyesun Jang, Yukyeong Lee
+//  Version: 0.1
+//  Purpose: Quick template for parsing Windows JumpList-automatic(*.automaticDestinations-ms)
 //  Category: Operating System
-// File Mask: *.automaticDestinations-ms
+//  File Mask: *.automaticDestinations-ms
 //  ID Bytes: D0 CF 11 E0 A1 B1 1A E1
-//   History: 0.1 2022-02-17 Hyesun Jang, Yukyeong Lee: Initial release
+//  History: 0.1 2022-02-17 Hyesun Jang, Yukyeong Lee: Initial release
 //------------------------------------------------
 
 typedef ubyte GUID[16] <read=OLEReadGUID>;
