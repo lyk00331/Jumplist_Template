@@ -64,10 +64,7 @@ typedef struct {
     }
     short SectorShift;
     short SBAT;
-    //6byte인데 자료형이 6byte인게 없음
-    //ubyte reserved[6]
-    short Reserved1;
-    uint Reserved2;
+    ubyte reserved[6]
     uint DirectorySector;
     uint FATSector;
     uint SECID;
@@ -77,13 +74,11 @@ typedef struct {
     uint MiniFAT;
     uint First_DIFAT_Sector_Location;
     uint DIFATSector;
-    //uint FAT_N_Location;
     uint FAT_N_Location[109];
 }FileHeader;
 
 typedef struct{
     int Depot[128];
-    //BBAT bbat;   
 }BBATArray;
 
 typedef struct{
@@ -1121,8 +1116,6 @@ typedef struct{
 
 }LNK;
 
-//800부터 LNK시작임!!!
-
 //DestList Header
 typedef enum <uint> {
     Windows7or8 = 0x01,
@@ -1198,7 +1191,6 @@ LNK LNKEntry;
 //4C 00 00 00 01 14 02 00
 
 //Destlist Main
-//FileHeader header;
 while(true){
     if(ReadUInt(FTell())==0x04){
         destlist header;
