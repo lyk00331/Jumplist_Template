@@ -64,7 +64,10 @@ typedef struct {
     }
     short SectorShift;
     short SBAT;
-    ubyte reserved[6]
+    //6byte인데 자료형이 6byte인게 없음
+    //ubyte reserved[6]
+    short Reserved1;
+    uint Reserved2;
     uint DirectorySector;
     uint FATSector;
     uint SECID;
@@ -74,11 +77,13 @@ typedef struct {
     uint MiniFAT;
     uint First_DIFAT_Sector_Location;
     uint DIFATSector;
+    //uint FAT_N_Location;
     uint FAT_N_Location[109];
 }FileHeader;
 
 typedef struct{
     int Depot[128];
+    //BBAT bbat;   
 }BBATArray;
 
 typedef struct{
@@ -1116,6 +1121,8 @@ typedef struct{
 
 }LNK;
 
+//800부터 LNK시작임!!!
+
 //DestList Header
 typedef enum <uint> {
     Windows7or8 = 0x01,
@@ -1128,10 +1135,10 @@ typedef struct{
     uint TotalNumberOfPinnedEntries;
     uint UnkownValue;
     uint64 LastIssuedEntryIDNumber;
-    if(header.version==0x04){
+    if(header2.version==0x04){
         uint64 NumberOfAddorDeleteorReOpenActions;
     }
-    else if(header.version == 0x01){
+    else if(header2.version == 0x01){
         uint64 NumberOfAddorDeleteActions;
     }
 } destlist;
@@ -1169,6 +1176,23 @@ typedef struct{
     wchar_t EntryStringData[LengthOfUnicode];
 } Win10_FileInfomation <optimize=true>;
 
+typedef struct{
+    while(true){
+    if(ReadUInt(FTell())==0x04){
+        destlist header2;
+        Win10_FileInfomation FileInfo;
+        break;
+    }
+    else if(ReadUInt(FTell())==0x01){
+        destlist header;
+        Win7or8_FileInfomation FileInfo;
+        break;
+    }
+    else
+        FSeek(FTell()+1);
+    }  
+}Destlist;
+
 local int flag;
 FSeek(28);
 if(ReadUByte(FTell()) == 0xFE){
@@ -1180,6 +1204,7 @@ if(ReadUByte(FTell()) == 0xFE){
     flag=0;
 }
 
+
 FSeek(0);     
 FileHeader header;
 FSeek((header.FAT_N_Location[0]+0x01)*0x200);
@@ -1188,20 +1213,13 @@ RootStorageArray RootStorage;
 FSeek((header.MiniFATLocation+1)*512);
 MiniFAT minifat;
 LNK LNKEntry;
-//4C 00 00 00 01 14 02 00
+Destlist dest;
 
-//Destlist Main
-while(true){
-    if(ReadUInt(FTell())==0x04){
-        destlist header;
-        Win10_FileInfomation FileInfo;
-        break;
-    }
-    else if(ReadUInt(FTell())==0x01){
-        destlist header;
-        Win7or8_FileInfomation FileInfo;
-        break;
-    }
+
+while (!FEof())
+{
+    if(ReadUInt64(FTell()) == 0x000214010000004C)
+            LNK LNKEntry;
     else
         FSeek(FTell()+1);
 }
