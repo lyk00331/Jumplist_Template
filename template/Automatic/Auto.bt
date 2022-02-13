@@ -59,7 +59,7 @@ typedef struct {
     }
     short SectorShift;
     short SBAT;
-    ubyte reserved[6]
+    ubyte reserved[6];
     uint DirectorySector;
     uint FATSector;
     uint SECID;
