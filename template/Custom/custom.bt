@@ -1025,15 +1025,14 @@ typedef struct{
 
 }LNK;
 
-LittleEndian();
-
 //----------------
 //  Main
 //----------------
+LittleEndian();
 while (!FEof())
 {
-    if(ReadUInt(FTell()) == 0x4C)
-        LNK LNKEntry;
+    if(ReadUInt64(FTell()) == 0x000214010000004C)
+            LNK LNKEntry;
     else
         FSeek(FTell()+1);
 }
