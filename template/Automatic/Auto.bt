@@ -1,5 +1,5 @@
 //------------------------------------------------
-//--- 010 Editor v0.1 Jumplist Template
+//  010 Editor v0.1 Jumplist Template
 //
 //  File: JL_Auto.bt
 //  Authors: Hyesun Jang, Yukyeong Lee
@@ -11,6 +11,11 @@
 //  History: 0.1 2022-02-17 Hyesun Jang, Yukyeong Lee: Initial release
 //------------------------------------------------
 
+
+
+//----------------
+//  OLE Header
+//----------------
 typedef ubyte GUID[16] <read=OLEReadGUID>;
 typedef ubyte Node[16] <read=OLEReadGUID>;
 
@@ -70,11 +75,10 @@ typedef struct {
     uint First_DIFAT_Sector_Location;
     uint DIFATSector;
     uint FAT_N_Location[109];
-}FileHeader;
+}OLEFileHeader;
 
 typedef struct{
     int Depot[128];
-    //BBAT bbat;   
 }BBATArray;
 
 typedef struct{
@@ -110,6 +114,11 @@ typedef struct{
 
 }MiniFAT<size=512>;
 
+
+
+//----------------
+//  LNK.bt
+//----------------
 local int iCOLOR = 0x95E8FF;
 
 local int iToggleColor = iCOLOR;
@@ -1112,9 +1121,11 @@ typedef struct{
 
 }LNK;
 
-//800부터 LNK시작임!!!
 
-//DestList Header
+
+//----------------
+//  Destlist Header
+//----------------
 typedef enum <uint> {
     Windows7or8 = 0x01,
     Windows10 = 0x04
@@ -1126,13 +1137,13 @@ typedef struct{
     uint TotalNumberOfPinnedEntries;
     uint UnkownValue;
     uint64 LastIssuedEntryIDNumber;
-    if(header2.version==0x04){
+    if(destlistheader.version==0x04){
         uint64 NumberOfAddorDeleteorReOpenActions;
     }
-    else if(header2.version == 0x01){
+    else if(destlistheader.version == 0x01){
         uint64 NumberOfAddorDeleteActions;
     }
-} destlist;
+}DestlistFileHeader;
 
 typedef struct{
     uint64 Checksum;
@@ -1167,23 +1178,6 @@ typedef struct{
     wchar_t EntryStringData[LengthOfUnicode];
 } Win10_FileInfomation <optimize=true>;
 
-typedef struct{
-    while(true){
-    if(ReadUInt(FTell())==0x04){
-        destlist header2;
-        Win10_FileInfomation FileInfo;
-        break;
-    }
-    else if(ReadUInt(FTell())==0x01){
-        destlist header;
-        Win7or8_FileInfomation FileInfo;
-        break;
-    }
-    else
-        FSeek(FTell()+1);
-    }  
-}Destlist;
-
 local int flag;
 FSeek(28);
 if(ReadUByte(FTell()) == 0xFE){
@@ -1195,17 +1189,34 @@ if(ReadUByte(FTell()) == 0xFE){
     flag=0;
 }
 
-
-FSeek(0);     
-FileHeader header;
-FSeek((header.FAT_N_Location[0]+0x01)*0x200);
+FSeek(0);
+OLEFileHeader oleheader;
+FSeek((oleheader.FAT_N_Location[0]+0x01)*0x200);
 BBATArray bbat;
 RootStorageArray RootStorage;
-FSeek((header.MiniFATLocation+1)*512);
+FSeek((oleheader.MiniFATLocation+1)*512);
 MiniFAT minifat;
 LNK LNKEntry;
-Destlist dest;
 
+
+
+//----------------
+//  Destlist Main
+//----------------
+while(true){
+    if(ReadUInt(FTell())==0x04){
+        DestlistFileHeader destlistheader;
+        Win10_FileInfomation FileInfo;
+        break;
+    }
+    else if(ReadUInt(FTell())==0x01){
+        DestlistFileHeader destlistheader;
+        Win7or8_FileInfomation FileInfo;
+        break;
+    }
+    else
+        FSeek(FTell()+1);
+}
 
 while (!FEof())
 {
