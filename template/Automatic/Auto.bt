@@ -8,7 +8,8 @@
 //  Category: Operating System
 //  File Mask: *.automaticDestinations-ms
 //  ID Bytes: D0 CF 11 E0 A1 B1 1A E1
-//  History: 0.1 2022-02-17 Hyesun Jang, Yukyeong Lee: Initial release
+//  History: 
+//  0.1   2022-02-17 Hyesun Jang, Yukyeong Lee: Initial release
 //------------------------------------------------
 
 //----------------
@@ -1186,6 +1187,9 @@ if(ReadUByte(FTell()) == 0xFE){
     flag=0;
 }
 
+//----------------
+//  OLE
+//----------------
 FSeek(0);
 OLEFileHeader oleheader;
 FSeek((oleheader.FAT_N_Location[0]+0x01)*0x200);
@@ -1193,6 +1197,10 @@ BBATArray bbat;
 RootStorageArray RootStorage;
 FSeek((oleheader.MiniFATLocation+1)*512);
 MiniFAT minifat;
+
+//----------------
+// LNK
+//----------------
 LNK LNKEntry;
 
 //----------------
