@@ -12,6 +12,7 @@
 //  0.1   2022-02-17 Hyesun Jang, Yukyeong Lee: Initial release
 //------------------------------------------------
 
+
 //----------------
 //  OLE
 //----------------
@@ -1224,10 +1225,15 @@ while(true){
 //----------------
 //  LNK
 //----------------
+local uint count = 0;
 while (!FEof())
 {
-    if(ReadUInt64(FTell()) == 0x000214010000004C)
-            LNK LNKEntry;
+    if(count >= (destlistheader.LastIssuedEntryIDNumber - 1))
+        break;
+    else if(ReadInt64(FTell()) == 0x000214010000004C){
+        count+=1;
+        LNK LNKEntry;
+    }
     else
         FSeek(FTell()+1);
 }
